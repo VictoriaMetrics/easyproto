@@ -33,9 +33,11 @@ func (mp *MarshalerPool) Put(m *Marshaler) {
 
 // Marshaler helps marshaling arbitrary protobuf messages.
 //
-// Construct message with Append* functions and then call Marshal* for marshaling the constructed message.
+// Construct message with Append* functions at MessageMarshaler() and then call Marshal* for marshaling the constructed message.
 //
-// It is recommended obtaining Marshaler via MarshalerPool in order to reduce memory allocations.
+// It is unsafe to use a single Marshaler instance from multiple concurrently running goroutines.
+//
+// It is recommended re-cycling Marshaler via MarshalerPool in order to reduce memory allocations.
 type Marshaler struct {
 	// mm contains the root MessageMarshaler.
 	mm *MessageMarshaler
@@ -113,6 +115,9 @@ func (m *Marshaler) Reset() {
 
 // MarshalWithLen marshals m, appends its length together with the marshaled m to dst and returns the result.
 //
+// E.g. appends length-delimited protobuf message to dst.
+// The length of the resulting message can be read via UnmarshalMessageLen() function.
+//
 // See also Marshal.
 func (m *Marshaler) MarshalWithLen(dst []byte) []byte {
 	if m.mm == nil {
@@ -133,6 +138,8 @@ func (m *Marshaler) MarshalWithLen(dst []byte) []byte {
 }
 
 // Marshal appends marshaled protobuf m to dst and returns the result.
+//
+// The marshaled message can be read via FieldContext.NextField().
 //
 // See also MarshalWithLen.
 func (m *Marshaler) Marshal(dst []byte) []byte {
@@ -301,6 +308,8 @@ func (mm *MessageMarshaler) AppendBytes(fieldNum uint32, b []byte) {
 }
 
 // AppendMessage appends protobuf message with the given fieldNum to m.
+//
+// The function returns the MessageMarshaler for constructing the appended message.
 func (mm *MessageMarshaler) AppendMessage(fieldNum uint32) *MessageMarshaler {
 	tag := makeTag(fieldNum, wireTypeLen)
 

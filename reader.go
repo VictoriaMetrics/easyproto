@@ -7,9 +7,9 @@ import (
 	"unsafe"
 )
 
-// FieldContext identifies a single protobuf-encoded field.
+// FieldContext represents a single protobuf-encoded field after NextField() call.
 type FieldContext struct {
-	// FieldNum is the field number
+	// FieldNum is the number of protobuf field read after NextField() call.
 	FieldNum uint32
 
 	// wireType is the wire type for the given field
@@ -264,7 +264,7 @@ func (fc *FieldContext) Double() (float64, bool) {
 
 // String returns string value for fc.
 //
-// The returned string is valid until the underlying buffer isn't changed.
+// The returned string is valid while the underlying buffer isn't changed.
 //
 // False is returned if fc doesn't contain string value.
 func (fc *FieldContext) String() (string, bool) {
@@ -277,7 +277,7 @@ func (fc *FieldContext) String() (string, bool) {
 
 // Bytes returns bytes value for fc.
 //
-// The returned byte slice is valid until the underlying buffer isn't changed.
+// The returned byte slice is valid while the underlying buffer isn't changed.
 //
 // False is returned if fc doesn't contain bytes value.
 func (fc *FieldContext) Bytes() ([]byte, bool) {
