@@ -51,7 +51,7 @@ type Sample struct {
 
 Since you write the code on yourself without any `go generate` and `protoc` invocations,
 you are free to use arbitrary fields and methods in these structs. You can also specify the most suitable types for these fields.
-For example, the `Sample` struct may be written as the following if you need the ability to detect empty values and timestamps:
+For example, the `Sample` struct may be written as the following if you need an ability to detect empty values and timestamps:
 
 ```go
 type Sample struct {
@@ -103,7 +103,7 @@ For example, you can construct arbitrary protobuf messages on the fly without th
 
 ```go
 func CreateProtobufMessageOnTheFly() []byte {
-	// Dynamically construct timeseries message 10 samples
+	// Dynamically construct timeseries message with 10 samples
 	var m easyproto.Marshaler
 	mm := m.MessageMarshaler()
 	mm.AppendString(1, "foo")
