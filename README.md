@@ -47,7 +47,7 @@ type Sample struct {
 	Value     float64
 	Timestamp int64
 }
-``
+```
 
 Since you write the code on yourself without any `go generate` and `protoc` invocations,
 you are free to use arbitrary fields and methods in these structs. You can also specify the most suitable types for these fields.
