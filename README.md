@@ -9,7 +9,7 @@ for marshaling and unmarshaling of [protobuf](https://protobuf.dev/) messages wi
 
 - There is no need in [protoc](https://grpc.io/docs/protoc-installation/) or [go generate](https://go.dev/blog/generate) -
   just write simple maintainable code for marshaling and unmarshaling protobuf messages.
-- `easyproto` doesn't increase your binary size by tens of megabytes unlike traditional `protoc`-combiled code may does.
+- `easyproto` doesn't increase your binary size by tens of megabytes unlike traditional `protoc`-combiled code may do.
 - `easyproto` allows writing zero-alloc code for marshaling and unmarshaling of arbitrary complex protobuf messages. See [examples](#examples).
 
 ## Restrictions
