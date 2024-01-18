@@ -1,7 +1,6 @@
 package easyproto
 
 import (
-	"encoding/binary"
 	"math"
 	"math/bits"
 	"sync"
@@ -677,11 +676,25 @@ func (f *field) marshal(dst []byte, m *Marshaler) []byte {
 }
 
 func marshalUint64(dst []byte, u64 uint64) []byte {
-	return binary.LittleEndian.AppendUint64(dst, u64)
+	return append(dst,
+		byte(u64),
+		byte(u64>>8),
+		byte(u64>>16),
+		byte(u64>>24),
+		byte(u64>>32),
+		byte(u64>>40),
+		byte(u64>>48),
+		byte(u64>>56),
+	)
 }
 
 func marshalUint32(dst []byte, u32 uint32) []byte {
-	return binary.LittleEndian.AppendUint32(dst, u32)
+	return append(dst,
+		byte(u32),
+		byte(u32>>8),
+		byte(u32>>16),
+		byte(u32>>24),
+	)
 }
 
 func marshalVarUint64(dst []byte, u64 uint64) []byte {
