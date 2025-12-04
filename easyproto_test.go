@@ -1454,6 +1454,7 @@ func TestMarshalUnmarshalMessage(t *testing.T) {
 	}
 
 	unmarshalLabel := func(src []byte) (label, error) {
+		srcOrig := src
 		var lbl label
 		var fc FieldContext
 		for len(src) > 0 {
@@ -1479,6 +1480,31 @@ func TestMarshalUnmarshalMessage(t *testing.T) {
 			}
 			src = tail
 		}
+
+		// Verify GetMessageData for labelNameField
+		data, ok, err := GetMessageData(srcOrig, labelNameFieldNum)
+		if err != nil {
+			return lbl, fmt.Errorf("error in GetMessageData for labelNameFieldNum: %w", err)
+		}
+		if !ok {
+			return lbl, fmt.Errorf("missing labelNameField")
+		}
+		if string(data) != lbl.Name {
+			return lbl, fmt.Errorf("unexpected labelName; got %q; want %q", data, lbl.Name)
+		}
+
+		// Verify GetMessageData for labelValueFieldNum
+		data, ok, err = GetMessageData(srcOrig, labelValueFieldNum)
+		if err != nil {
+			return lbl, fmt.Errorf("error in GetMessageData for labelValueFieldNum: %w", err)
+		}
+		if !ok {
+			return lbl, fmt.Errorf("missing labelValueField")
+		}
+		if string(data) != lbl.Value {
+			return lbl, fmt.Errorf("unexpected labelName; got %q; want %q", data, lbl.Value)
+		}
+
 		return lbl, nil
 	}
 	unmarshalSample := func(src []byte) (sample, error) {
