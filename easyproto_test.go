@@ -1481,33 +1481,35 @@ func TestMarshalUnmarshalMessage(t *testing.T) {
 			src = tail
 		}
 
-		// Verify GetMessageData for labelNameField
-		data, ok, err := GetMessageData(srcOrig, labelNameFieldNum)
+		// Verify GetString for labelNameField
+		labelName, ok, err := GetString(srcOrig, labelNameFieldNum)
 		if err != nil {
 			return lbl, fmt.Errorf("error in GetMessageData for labelNameFieldNum: %w", err)
 		}
 		if !ok {
 			return lbl, fmt.Errorf("missing labelNameField")
 		}
-		if string(data) != lbl.Name {
-			return lbl, fmt.Errorf("unexpected labelName; got %q; want %q", data, lbl.Name)
+		if labelName != lbl.Name {
+			return lbl, fmt.Errorf("unexpected labelName; got %q; want %q", labelName, lbl.Name)
 		}
 
-		// Verify GetMessageData for labelValueFieldNum
-		data, ok, err = GetMessageData(srcOrig, labelValueFieldNum)
+		// Verify GetString for labelValueFieldNum
+		labelValue, ok, err := GetString(srcOrig, labelValueFieldNum)
 		if err != nil {
 			return lbl, fmt.Errorf("error in GetMessageData for labelValueFieldNum: %w", err)
 		}
 		if !ok {
 			return lbl, fmt.Errorf("missing labelValueField")
 		}
-		if string(data) != lbl.Value {
-			return lbl, fmt.Errorf("unexpected labelName; got %q; want %q", data, lbl.Value)
+		if labelValue != lbl.Value {
+			return lbl, fmt.Errorf("unexpected labelName; got %q; want %q", labelValue, lbl.Value)
 		}
 
 		return lbl, nil
 	}
 	unmarshalSample := func(src []byte) (sample, error) {
+		srcOrig := src
+
 		var smpl sample
 		var fc FieldContext
 		for len(src) > 0 {
@@ -1533,6 +1535,31 @@ func TestMarshalUnmarshalMessage(t *testing.T) {
 			}
 			src = tail
 		}
+
+		// Verify GetDouble
+		f64, ok, err := GetDouble(srcOrig, sampleValueFieldNum)
+		if err != nil {
+			return smpl, fmt.Errorf("error in GetDouble for sampleValueFieldNum: %w", err)
+		}
+		if !ok {
+			return smpl, fmt.Errorf("missing sampleValueField")
+		}
+		if f64 != smpl.Value {
+			return smpl, fmt.Errorf("unexpected sample value; got %v; want %v", f64, smpl.Value)
+		}
+
+		// Verify GetInt64
+		i64, ok, err := GetInt64(srcOrig, sampleTimestampFieldNum)
+		if err != nil {
+			return smpl, fmt.Errorf("error in GetInt64 for sampleTimestampFieldNum: %w", err)
+		}
+		if !ok {
+			return smpl, fmt.Errorf("missing sampleTimestampField")
+		}
+		if i64 != smpl.Timestamp {
+			return smpl, fmt.Errorf("unexpected timestamp; got %d; want %d", i64, smpl.Timestamp)
+		}
+
 		return smpl, nil
 	}
 	unmarshalTimeseries := func(src []byte) (timeseries, error) {
