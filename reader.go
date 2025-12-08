@@ -155,6 +155,21 @@ const (
 	wireTypeI32 = wireType(5)
 )
 
+func (wt wireType) String() string {
+	switch wt {
+	case wireTypeVarint:
+		return "varint"
+	case wireTypeI64:
+		return "i64"
+	case wireTypeLen:
+		return "len"
+	case wireTypeI32:
+		return "i32"
+	default:
+		return fmt.Sprintf("unknown (%d)", int(wt))
+	}
+}
+
 // Int32 returns int32 value for fc.
 //
 // False is returned if fc doesn't contain int32 value.
@@ -699,7 +714,7 @@ func (fc *FieldContext) getField(src []byte, fieldNum uint32, neededWireType wir
 			continue
 		}
 		if fc.wireType != neededWireType {
-			return false, fmt.Errorf("fieldNum=%d contain unexpected wireType; got %d; want %d", fieldNum, fc.wireType, neededWireType)
+			return false, fmt.Errorf("fieldNum=%d contains unexpected wireType; got %s; want %s", fieldNum, fc.wireType, neededWireType)
 		}
 		return true, nil
 	}
