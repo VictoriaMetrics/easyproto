@@ -977,6 +977,64 @@ func GetMessageData(src []byte, fieldNum uint32) (data []byte, ok bool, err erro
 	return fc.data, true, nil
 }
 
+// GetFixed32 returns fixed32 value for the given fieldNum from protobuf-encoded message at src.
+//
+// ok=false is returned if src doesn't contain the given fieldNum.
+//
+// This function is useful when only a single message with the given fieldNum must be obtained from protobuf-encoded src.
+// Otherwise use FieldContext for obtaining multiple message from protobuf-encoded src.
+func GetFixed32(src []byte, fieldNum uint32) (n uint32, ok bool, err error) {
+	var fc FieldContext
+	ok, err = fc.getField(src, fieldNum, wireTypeI32)
+	if err != nil {
+		return 0, false, err
+	}
+	if !ok {
+		return 0, false, nil
+	}
+	n = mustGetUint32(fc.intValue)
+	return n, true, nil
+}
+
+// GetSfixed32 returns sfixed32 value for the given fieldNum from protobuf-encoded message at src.
+//
+// ok=false is returned if src doesn't contain the given fieldNum.
+//
+// This function is useful when only a single message with the given fieldNum must be obtained from protobuf-encoded src.
+// Otherwise use FieldContext for obtaining multiple message from protobuf-encoded src.
+func GetSfixed32(src []byte, fieldNum uint32) (n int32, ok bool, err error) {
+	var fc FieldContext
+	ok, err = fc.getField(src, fieldNum, wireTypeI32)
+	if err != nil {
+		return 0, false, err
+	}
+	if !ok {
+		return 0, false, nil
+	}
+	n = mustGetInt32(fc.intValue)
+	return n, true, nil
+}
+
+// GetFloat returns float32 value for the given fieldNum from protobuf-encoded message at src.
+//
+// ok=false is returned if src doesn't contain the given fieldNum.
+//
+// This function is useful when only a single message with the given fieldNum must be obtained from protobuf-encoded src.
+// Otherwise use FieldContext for obtaining multiple message from protobuf-encoded src.
+func GetFloat(src []byte, fieldNum uint32) (f float32, ok bool, err error) {
+	var fc FieldContext
+	ok, err = fc.getField(src, fieldNum, wireTypeI32)
+	if err != nil {
+		return 0, false, err
+	}
+	if !ok {
+		return 0, false, nil
+	}
+	u32 := mustGetUint32(fc.intValue)
+	f = math.Float32frombits(u32)
+	return f, true, nil
+}
+
 func decodeZigZagInt64(u64 uint64) int64 {
 	return int64(u64>>1) ^ (int64(u64<<63) >> 63)
 }
