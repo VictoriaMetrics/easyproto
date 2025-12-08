@@ -933,6 +933,9 @@ func GetString(src []byte, fieldNum uint32) (s string, ok bool, err error) {
 	if err != nil {
 		return "", false, err
 	}
+	if !ok {
+		return "", false, nil
+	}
 	return unsafeBytesToString(fc.data), true, nil
 }
 
@@ -949,6 +952,9 @@ func GetBytes(src []byte, fieldNum uint32) (b []byte, ok bool, err error) {
 	if err != nil {
 		return nil, false, err
 	}
+	if !ok {
+		return nil, false, nil
+	}
 	return fc.data, true, nil
 }
 
@@ -964,6 +970,9 @@ func GetMessageData(src []byte, fieldNum uint32) (data []byte, ok bool, err erro
 	ok, err = fc.getField(src, fieldNum, wireTypeLen)
 	if err != nil {
 		return nil, false, err
+	}
+	if !ok {
+		return nil, false, nil
 	}
 	return fc.data, true, nil
 }
