@@ -35,7 +35,7 @@ func (fc *FieldContext) NextField(src []byte) ([]byte, error) {
 			msgLen := int(n & 0xff)
 			src = src[2:]
 			if len(src) < msgLen {
-				return src, fmt.Errorf("cannot read field for from %d bytes; need at least %d bytes", len(src), msgLen)
+				return src, fmt.Errorf("cannot read field from %d bytes; need at least %d bytes", len(src), msgLen)
 			}
 			fc.FieldNum = uint32(n >> (8 + 3))
 			fc.wireType = wireTypeLen
