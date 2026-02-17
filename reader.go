@@ -7,9 +7,9 @@ import (
 	"unsafe"
 )
 
-// FieldContext represents a single protobuf-encoded field after NextField() call.
+// FieldContext represents a single protobuf-encoded field after NextField() or FieldByNum() call.
 type FieldContext struct {
-	// FieldNum is the number of protobuf field read after NextField() call.
+	// FieldNum is the number of protobuf field read after NextField() or FieldByNum() call.
 	FieldNum uint32
 
 	// wireType is the wire type for the given field
@@ -22,11 +22,35 @@ type FieldContext struct {
 	intValue uint64
 }
 
+// FieldByNum sets fc to the field with the given fieldNum at protobuf-encoded src.
+//
+// false is returned if src doesn't contain a field with the given fieldNum.
+//
+// It is unsafe modifying src while FieldContext is in use.
+//
+// See also NextField().
+func (fc *FieldContext) FieldByNum(src []byte, fieldNum uint32) (bool, error) {
+	for len(src) > 0 {
+		var err error
+		src, err = fc.NextField(src)
+		if err != nil {
+			return false, fmt.Errorf("cannot read the next field: %w", err)
+		}
+		if fc.FieldNum != fieldNum {
+			continue
+		}
+		return true, nil
+	}
+	return false, nil
+}
+
 // NextField reads the next field from protobuf-encoded src.
 //
 // It returns the tail left after reading the next field from src.
 //
 // It is unsafe modifying src while FieldContext is in use.
+//
+// See also FieldByNum().
 func (fc *FieldContext) NextField(src []byte) ([]byte, error) {
 	if len(src) >= 2 {
 		n := uint16(src[0])<<8 | uint16(src[1])
@@ -714,21 +738,17 @@ func (fc *FieldContext) UnpackFloats(dst []float32) ([]float32, bool) {
 }
 
 func (fc *FieldContext) getField(src []byte, fieldNum uint32, neededWireType wireType) (bool, error) {
-	for len(src) > 0 {
-		var err error
-		src, err = fc.NextField(src)
-		if err != nil {
-			return false, fmt.Errorf("cannot read the next field: %w", err)
-		}
-		if fc.FieldNum != fieldNum {
-			continue
-		}
-		if fc.wireType != neededWireType {
-			return false, fmt.Errorf("fieldNum=%d contains unexpected wireType; got %s; want %s", fieldNum, fc.wireType, neededWireType)
-		}
-		return true, nil
+	ok, err := fc.FieldByNum(src, fieldNum)
+	if err != nil {
+		return false, err
 	}
-	return false, nil
+	if !ok {
+		return false, nil
+	}
+	if fc.wireType != neededWireType {
+		return false, fmt.Errorf("fieldNum=%d contains unexpected wireType; got %s; want %s", fieldNum, fc.wireType, neededWireType)
+	}
+	return true, nil
 }
 
 // GetInt32 returns the int32 value for the given fieldNum from protobuf-encoded message at src.
