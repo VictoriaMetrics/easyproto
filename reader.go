@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
+	"sync"
 	"unsafe"
 )
 
@@ -34,7 +35,7 @@ func (fc *FieldContext) FieldByNum(src []byte, fieldNum uint32) (bool, error) {
 		var err error
 		src, err = fc.NextField(src)
 		if err != nil {
-			return false, fmt.Errorf("cannot read the next field: %w", err)
+			return false, fmt.Errorf("cannot read the next field while searching for fieldNum=%d: %w", fieldNum, err)
 		}
 		if fc.FieldNum != fieldNum {
 			continue
@@ -380,6 +381,11 @@ func (fc *FieldContext) Float() (float32, bool) {
 	return v, true
 }
 
+// UnpackInt32s unpacks int32 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackInt32s(src []byte, fieldNum uint32, dst []int32) ([]int32, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackInt32s)
+}
+
 // UnpackInt32s unpacks int32 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain int32 values.
@@ -412,6 +418,11 @@ func (fc *FieldContext) UnpackInt32s(dst []int32) ([]int32, bool) {
 	return dst, true
 }
 
+// UnpackInt64s unpacks int64 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackInt64s(src []byte, fieldNum uint32, dst []int64) ([]int64, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackInt64s)
+}
+
 // UnpackInt64s unpacks int64 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain int64 values.
@@ -434,6 +445,11 @@ func (fc *FieldContext) UnpackInt64s(dst []int64) ([]int64, bool) {
 		dst = append(dst, int64(u64))
 	}
 	return dst, true
+}
+
+// UnpackUint32s unpacks uint32 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackUint32s(src []byte, fieldNum uint32, dst []uint32) ([]uint32, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackUint32s)
 }
 
 // UnpackUint32s unpacks uint32 values from fc, appends them to dst and returns the result.
@@ -468,6 +484,11 @@ func (fc *FieldContext) UnpackUint32s(dst []uint32) ([]uint32, bool) {
 	return dst, true
 }
 
+// UnpackUint64s unpacks uint64 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackUint64s(src []byte, fieldNum uint32, dst []uint64) ([]uint64, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackUint64s)
+}
+
 // UnpackUint64s unpacks uint64 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain uint64 values.
@@ -490,6 +511,11 @@ func (fc *FieldContext) UnpackUint64s(dst []uint64) ([]uint64, bool) {
 		dst = append(dst, u64)
 	}
 	return dst, true
+}
+
+// UnpackSint32s unpacks sint32 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackSint32s(src []byte, fieldNum uint32, dst []int32) ([]int32, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackSint32s)
 }
 
 // UnpackSint32s unpacks sint32 values from fc, appends them to dst and returns the result.
@@ -526,6 +552,11 @@ func (fc *FieldContext) UnpackSint32s(dst []int32) ([]int32, bool) {
 	return dst, true
 }
 
+// UnpackSint64s unpacks sint64 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackSint64s(src []byte, fieldNum uint32, dst []int64) ([]int64, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackSint64s)
+}
+
 // UnpackSint64s unpacks sint64 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain sint64 values.
@@ -550,6 +581,11 @@ func (fc *FieldContext) UnpackSint64s(dst []int64) ([]int64, bool) {
 		dst = append(dst, i64)
 	}
 	return dst, true
+}
+
+// UnpackBools unpacks bool values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackBools(src []byte, fieldNum uint32, dst []bool) ([]bool, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackBools)
 }
 
 // UnpackBools unpacks bool values from fc, appends them to dst and returns the result.
@@ -584,6 +620,11 @@ func (fc *FieldContext) UnpackBools(dst []bool) ([]bool, bool) {
 	return dst, true
 }
 
+// UnpackFixed64s unpacks fixed64 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackFixed64s(src []byte, fieldNum uint32, dst []uint64) ([]uint64, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackFixed64s)
+}
+
 // UnpackFixed64s unpacks fixed64 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain fixed64 values.
@@ -609,6 +650,11 @@ func (fc *FieldContext) UnpackFixed64s(dst []uint64) ([]uint64, bool) {
 	return dst, true
 }
 
+// UnpackSfixed64s unpacks sfixed64 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackSfixed64s(src []byte, fieldNum uint32, dst []int64) ([]int64, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackSfixed64s)
+}
+
 // UnpackSfixed64s unpacks sfixed64 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain sfixed64 values.
@@ -632,6 +678,11 @@ func (fc *FieldContext) UnpackSfixed64s(dst []int64) ([]int64, bool) {
 		dst = append(dst, int64(u64))
 	}
 	return dst, true
+}
+
+// UnpackDoubles unpacks double values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackDoubles(src []byte, fieldNum uint32, dst []float64) ([]float64, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackDoubles)
 }
 
 // UnpackDoubles unpacks double values from fc, appends them to dst and returns the result.
@@ -660,6 +711,11 @@ func (fc *FieldContext) UnpackDoubles(dst []float64) ([]float64, bool) {
 	return dst, true
 }
 
+// UnpackFixed32s unpacks fixed32 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackFixed32s(src []byte, fieldNum uint32, dst []uint32) ([]uint32, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackFixed32s)
+}
+
 // UnpackFixed32s unpacks fixed32 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain fixed32 values.
@@ -685,6 +741,11 @@ func (fc *FieldContext) UnpackFixed32s(dst []uint32) ([]uint32, bool) {
 	return dst, true
 }
 
+// UnpackSfixed32s unpacks sfixed32 values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackSfixed32s(src []byte, fieldNum uint32, dst []int32) ([]int32, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackSfixed32s)
+}
+
 // UnpackSfixed32s unpacks sfixed32 values from fc, appends them to dst and returns the result.
 //
 // False is returned if fc doesn't contain sfixed32 values.
@@ -708,6 +769,11 @@ func (fc *FieldContext) UnpackSfixed32s(dst []int32) ([]int32, bool) {
 		dst = append(dst, int32(u32))
 	}
 	return dst, true
+}
+
+// UnpackFloats unpacks float values from protobuf-encoded fields at src with the given fieldNum, appends them to dst and returns the result.
+func UnpackFloats(src []byte, fieldNum uint32, dst []float32) ([]float32, error) {
+	return unpackArray(src, fieldNum, dst, (*FieldContext).UnpackFloats)
 }
 
 // UnpackFloats unpacks float values from fc, appends them to dst and returns the result.
@@ -750,6 +816,35 @@ func (fc *FieldContext) getField(src []byte, fieldNum uint32, neededWireType wir
 	}
 	return true, nil
 }
+
+func unpackArray[T any](src []byte, fieldNum uint32, dst []T, unpackFunc func(fc *FieldContext, dst []T) ([]T, bool)) ([]T, error) {
+	v := fieldContextPool.Get()
+	if v == nil {
+		v = &FieldContext{}
+	}
+	defer fieldContextPool.Put(v)
+
+	fc := v.(*FieldContext)
+	for len(src) > 0 {
+		var err error
+		src, err = fc.NextField(src)
+		if err != nil {
+			return dst, fmt.Errorf("cannot read the next field while searching for fieldNum=%d: %w", fieldNum, err)
+		}
+		if fc.FieldNum != fieldNum {
+			continue
+		}
+
+		var ok bool
+		dst, ok = unpackFunc(fc, dst)
+		if !ok {
+			return dst, fmt.Errorf("cannot unpack bools from field with fieldNum=%d", fieldNum)
+		}
+	}
+	return dst, nil
+}
+
+var fieldContextPool sync.Pool
 
 // GetInt32 returns the int32 value for the given fieldNum from protobuf-encoded message at src.
 //

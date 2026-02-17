@@ -571,20 +571,9 @@ func TestMarshalUnmarshalEmptyInt32s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackInt32s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackInt32s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackInt32s()")
+		t.Fatalf("unexpected error in UnpackInt32s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -600,20 +589,9 @@ func TestMarshalUnmarshalEmptyInt64s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackInt64s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackInt64s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackInt64s()")
+		t.Fatalf("unexpected error in UnpackInt64s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -629,20 +607,9 @@ func TestMarshalUnmarshalEmptyUint32s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackUint32s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackUint32s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackUint32s()")
+		t.Fatalf("unexpected error in UnpackUint32s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -658,20 +625,9 @@ func TestMarshalUnmarshalEmptyUint64s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackUint64s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackUint64s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackUint64s()")
+		t.Fatalf("unexpected error in UnpackUint64s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -687,20 +643,9 @@ func TestMarshalUnmarshalEmptySint32s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackSint32s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackSint32s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackSint32s()")
+		t.Fatalf("unexpected error in UnpackSint32s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -716,20 +661,9 @@ func TestMarshalUnmarshalEmptySint64s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackSint64s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackSint64s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackSint64s()")
+		t.Fatalf("unexpected error in UnpackSint64s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -745,20 +679,9 @@ func TestMarshalUnmarshalEmptyBools(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackBools(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackBools(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackBools()")
+		t.Fatalf("unexpected error in UnpackPools: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%v", vs)
@@ -774,20 +697,9 @@ func TestMarshalUnmarshalEmptyFixed64s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackFixed64s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackFixed64s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackFixed64s()")
+		t.Fatalf("unexpected error in UnpackFixed64s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -803,20 +715,9 @@ func TestMarshalUnmarshalEmptySfixed64s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackSfixed64s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackSfixed64s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackSfixed64s()")
+		t.Fatalf("unexpected error in UnpackSfixed64s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -832,20 +733,9 @@ func TestMarshalUnmarshalEmptyDoubles(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackDoubles(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackDoubles(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackDobules()")
+		t.Fatalf("unexpected error in UnpackDoubles(): %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%v", vs)
@@ -861,20 +751,9 @@ func TestMarshalUnmarshalEmptyFixed32s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackFixed32s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackFixed32s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackFixed32s()")
+		t.Fatalf("unexpected error in UnpackFixed32s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -890,20 +769,9 @@ func TestMarshalUnmarshalEmptySfixed32s(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackSfixed32s(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackSfixed32s(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackSfixed32s()")
+		t.Fatalf("unexpected error in UnpackSfixed32s: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%d", vs)
@@ -919,20 +787,9 @@ func TestMarshalUnmarshalEmptyFloats(t *testing.T) {
 	data := m.Marshal(nil)
 	mp.Put(m)
 
-	var fc FieldContext
-	tail, err := fc.NextField(data)
+	vs, err := UnpackFloats(data, fieldNum, nil)
 	if err != nil {
-		t.Fatalf("unexpected error in NextField(): %s", err)
-	}
-	if len(tail) != 0 {
-		t.Fatalf("unexpected non-empty tail with len(tail)=%d", len(tail))
-	}
-	if fc.FieldNum != fieldNum {
-		t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-	}
-	vs, ok := fc.UnpackFloats(nil)
-	if !ok {
-		t.Fatalf("unexpected error in UnpackFloats()")
+		t.Fatalf("unexpected error in UnpackFloats: %s", err)
 	}
 	if len(vs) > 0 {
 		t.Fatalf("unexpected non-empty vs=%v", vs)
@@ -952,24 +809,10 @@ func TestMarshalUnmarshalInt32s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal int32 values
-	var vs []int32
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackInt32s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackInt32s()")
-		}
-		data = tail
+	vs, err := UnpackInt32s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackInt32s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -988,24 +831,10 @@ func TestMarshalUnmarshalInt64s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal int64 values
-	var vs []int64
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackInt64s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackInt64s()")
-		}
-		data = tail
+	vs, err := UnpackInt64s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackInt64s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1024,24 +853,10 @@ func TestMarshalUnmarshalUint32s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal uint32 values
-	var vs []uint32
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackUint32s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackUint32s()")
-		}
-		data = tail
+	vs, err := UnpackUint32s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackUint32s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1060,24 +875,10 @@ func TestMarshalUnmarshalUint64s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal uint64 values
-	var vs []uint64
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackUint64s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackUint64s()")
-		}
-		data = tail
+	vs, err := UnpackUint64s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackUint64s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1096,24 +897,10 @@ func TestMarshalUnmarshalSint32s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal sint32 values
-	var vs []int32
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackSint32s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackSint32s()")
-		}
-		data = tail
+	vs, err := UnpackSint32s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackSint32s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1132,24 +919,10 @@ func TestMarshalUnmarshalSint64s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal sint64 values
-	var vs []int64
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackSint64s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackSint64s()")
-		}
-		data = tail
+	vs, err := UnpackSint64s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackSint64s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1168,24 +941,10 @@ func TestMarshalUnmarshalBools(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal bool values
-	var vs []bool
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackBools(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackBools()")
-		}
-		data = tail
+	vs, err := UnpackBools(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %v; want %v", vs, values)
 	}
@@ -1204,24 +963,10 @@ func TestMarshalUnmarshalFixed64s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal fixed64 values
-	var vs []uint64
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackFixed64s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackFixed64s()")
-		}
-		data = tail
+	vs, err := UnpackFixed64s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackFixed64s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1240,24 +985,10 @@ func TestMarshalUnmarshalSfixed64s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal sfixed64 values
-	var vs []int64
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackSfixed64s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackSfixed64s()")
-		}
-		data = tail
+	vs, err := UnpackSfixed64s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackSfixed64s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1276,24 +1007,10 @@ func TestMarshalUnmarshalDoubles(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal double values
-	var vs []float64
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackDoubles(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackDoubles()")
-		}
-		data = tail
+	vs, err := UnpackDoubles(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackDoubles: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %v; want %v", vs, values)
 	}
@@ -1312,24 +1029,10 @@ func TestMarshalUnmarshalFixed32s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal fixed32 values
-	var vs []uint32
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackFixed32s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackFixed32s()")
-		}
-		data = tail
+	vs, err := UnpackFixed32s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackFixed32s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1348,24 +1051,10 @@ func TestMarshalUnmarshalSfixed32s(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal sfixed32 values
-	var vs []int32
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackSfixed32s(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackSfixed32s()")
-		}
-		data = tail
+	vs, err := UnpackSfixed32s(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackSfixed32s: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %d; want %d", vs, values)
 	}
@@ -1384,24 +1073,10 @@ func TestMarshalUnmarshalFloats(t *testing.T) {
 	mp.Put(m)
 
 	// Unmarshal float values
-	var vs []float32
-	var fc FieldContext
-	for len(data) > 0 {
-		tail, err := fc.NextField(data)
-		if err != nil {
-			t.Fatalf("unexpected error in NextField(): %s", err)
-		}
-		if fc.FieldNum != fieldNum {
-			t.Fatalf("unexpected fieldNum; got %d; want %d", fc.FieldNum, fieldNum)
-		}
-		var ok bool
-		vs, ok = fc.UnpackFloats(vs)
-		if !ok {
-			t.Fatalf("unexpected error in UnpackFloats()")
-		}
-		data = tail
+	vs, err := UnpackFloats(data, fieldNum, nil)
+	if err != nil {
+		t.Fatalf("unexpected error in UnpackFloats: %s", err)
 	}
-
 	if !reflect.DeepEqual(vs, values) {
 		t.Fatalf("unexpected values; got %v; want %v", vs, values)
 	}

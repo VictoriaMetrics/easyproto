@@ -6,6 +6,29 @@ import (
 	"testing"
 )
 
+func BenchmarkUnpackUint64s(b *testing.B) {
+	m := mp.Get()
+	defer mp.Put(m)
+
+	const fieldNum = 1
+	mm := m.MessageMarshaler()
+	mm.AppendUint64s(fieldNum, make([]uint64, 1000))
+	buf := m.Marshal(nil)
+
+	b.ReportAllocs()
+	b.SetBytes(int64(len(buf)))
+	b.RunParallel(func(pb *testing.PB) {
+		var dst []uint64
+		for pb.Next() {
+			var err error
+			dst, err = UnpackUint64s(buf, fieldNum, dst[:0])
+			if err != nil {
+				panic(fmt.Errorf("unexpected error: %s", err))
+			}
+		}
+	})
+}
+
 func BenchmarkMarshalComplexMessage(b *testing.B) {
 	const seriesCount = 1_000
 
