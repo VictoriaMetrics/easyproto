@@ -23,6 +23,16 @@ type FieldContext struct {
 	intValue uint64
 }
 
+func (fc *FieldContext) reset() {
+	fc.FieldNum = 0
+	fc.wireType = 0
+
+	// remove reference to external byte slice, so GC could release it.
+	fc.data = nil
+
+	fc.intValue = 0
+}
+
 // FieldByNum sets fc to the field with the given fieldNum at protobuf-encoded src.
 //
 // false is returned if src doesn't contain a field with the given fieldNum.
@@ -818,13 +828,9 @@ func (fc *FieldContext) getField(src []byte, fieldNum uint32, neededWireType wir
 }
 
 func unpackArray[T any](src []byte, fieldNum uint32, dst []T, unpackFunc func(fc *FieldContext, dst []T) ([]T, bool)) ([]T, error) {
-	v := fieldContextPool.Get()
-	if v == nil {
-		v = &FieldContext{}
-	}
-	defer fieldContextPool.Put(v)
+	fc := getFieldContext()
+	defer putFieldContext(fc)
 
-	fc := v.(*FieldContext)
 	for len(src) > 0 {
 		var err error
 		src, err = fc.NextField(src)
@@ -842,6 +848,19 @@ func unpackArray[T any](src []byte, fieldNum uint32, dst []T, unpackFunc func(fc
 		}
 	}
 	return dst, nil
+}
+
+func getFieldContext() *FieldContext {
+	v := fieldContextPool.Get()
+	if v == nil {
+		return &FieldContext{}
+	}
+	return v.(*FieldContext)
+}
+
+func putFieldContext(fc *FieldContext) {
+	fc.reset()
+	fieldContextPool.Put(fc)
 }
 
 var fieldContextPool sync.Pool
